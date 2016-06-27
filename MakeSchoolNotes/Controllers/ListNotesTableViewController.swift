@@ -34,11 +34,21 @@ override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:
         
         return cell
     }
-
-override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let identifier = segue.identifier {
             if identifier == "displayNote" {
                 print("Table view cell tapped")
+                
+                // 1
+                let indexPath = tableView.indexPathForSelectedRow!
+                // 2
+                let note = notes[indexPath.row]
+                // 3
+                let displayNoteViewController = segue.destinationViewController as! DisplayNoteViewController
+                // 4
+                displayNoteViewController.note = note
+                
             } else if identifier == "addNote" {
                 print("+ button tapped")
             }

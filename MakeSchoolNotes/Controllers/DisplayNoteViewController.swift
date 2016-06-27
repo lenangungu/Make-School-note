@@ -10,6 +10,8 @@ import UIKit
 
 class DisplayNoteViewController: UIViewController {
 
+var note: Note?
+
 override func viewDidLoad() {
     super.viewDidLoad()
   }
@@ -22,37 +24,38 @@ override func viewDidLoad() {
 //            }
 //        }
 //    }
-    
-    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let identifier = segue.identifier {
-            if identifier == "Cancel" {
-                print("Cancel button tapped")
-            } else if identifier == "Save" {
-                print("Save button tapped")
-                
+        let listNotesTableViewController = segue.destinationViewController as! ListNotesTableViewController
+        if segue.identifier == "Save" {
+            if let note = note {
                 // 1
-                let note = Note()
-                // 2
                 note.title = noteTitleTextField.text ?? ""
-                note.content = noteContentTextView.text
-                // 3
-                note.modificationTime = NSDate()
-                
-                // 1
-                let listNotesTableViewController = segue.destinationViewController as! ListNotesTableViewController
+                note.content = noteContentTextView.text ?? ""
                 // 2
-                listNotesTableViewController.notes.append(note)
-                
+                listNotesTableViewController.tableView.reloadData()
+            } else {
+                // 3
+                let newNote = Note()
+                newNote.title = noteTitleTextField.text ?? ""
+                newNote.content = noteContentTextView.text ?? ""
+                newNote.modificationTime = NSDate()
+                listNotesTableViewController.notes.append(newNote)
             }
         }
     }
-    
 override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        // 1
+    super.viewWillAppear(animated)
+    // 1
+    if let note = note {
+        // 2
+        noteTitleTextField.text = note.title
+        noteContentTextView.text = note.content
+    } else {
+        // 3
         noteTitleTextField.text = ""
         noteContentTextView.text = ""
+    }
+    
     }
     @IBOutlet weak var noteContentTextView: UITextView!
     
