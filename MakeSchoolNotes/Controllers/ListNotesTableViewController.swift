@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import RealmSwift
 
 class ListNotesTableViewController: UITableViewController {
+    
     
 
 override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -64,12 +66,27 @@ override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:
     
 override func viewDidLoad() {
     super.viewDidLoad()
-  }
+    notes = RealmHelper.retrieveNotes()
+    }
     
-    var notes = [Note]() {
+    
+ 
+    var notes: Results<Note>!{
+   // var notes = [Note]() {
         didSet {
             tableView.reloadData()
         }
     }
-  
+    
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath)
+    {
+        if editingStyle == .Delete {
+            //1
+            RealmHelper.deleteNote(notes[indexPath.row])
+            //2
+            notes = RealmHelper.retrieveNotes()
+        }
+    }
+    
+    
 }
